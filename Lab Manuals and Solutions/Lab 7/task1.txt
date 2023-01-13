@@ -1,0 +1,105 @@
+ include "emu8086.inc"
+.model small
+.stack 100h
+.data
+ 
+.code
+
+     print "Enter an algebraic expression: "
+     printn
+    
+     xor cx, cx         ;clear cx via xor operation
+    
+     input:
+     mov ah, 1 
+     int 21h 
+    
+     cmp al, 0dh 
+     je evaluate        ;evaluate input when carriage return
+     
+     cmp al, "(" 
+     je do_push         ;push if opening bracket
+    
+     cmp al, "{" 
+     je do_push 
+    
+     cmp al, "[" 
+     je do_push 
+     
+     cmp al, ")" 
+     je parentheses     ;evaluate expression if closing bracket
+     
+     cmp al, "}" 
+     je braces 
+    
+     cmp al, "]" 
+     je third_brackets 
+    
+     jmp input 
+    
+     do_push: 
+    
+     push ax 
+     inc cx 
+     jmp input          ; keep taking inputs for opening brackets
+    
+     parentheses: 
+    
+     pop dx 
+     dec cx 
+    
+     cmp cx, 0 
+     jl expression_invalid      ;Terminate program if too many closing brackets
+    
+     cmp dl, "(" 
+     jne expression_invalid     ; jump to label if imbalanced parentheses
+     jmp input 
+     
+     braces: 
+    
+     pop dx 
+     dec cx 
+    
+     cmp cx, 0 
+     jl expression_invalid 
+    
+     cmp dl, "{" 
+     jne expression_invalid 
+     jmp input 
+    
+     third_brackets: 
+     
+     pop dx 
+     dec cx 
+    
+     cmp cx, 0 
+     jl expression_invalid 
+    
+     cmp dl, "[" 
+     jne expression_invalid 
+     jmp input 
+    
+     evaluate: 
+    
+     cmp cx, 0 
+     jne expression_invalid      ;incorrect expression if too many opening brackets
+    
+     printn
+     print "Expression is Correct"
+     jmp exit 
+    
+     expression_invalid:
+     printn
+     print "Incorrect Expression"
+     jmp exit 
+     
+     
+    
+     exit: 
+    
+     mov ah, 4ch 
+     int 21h
+    
+    ;define
+    define_print_string
+    define_pthis

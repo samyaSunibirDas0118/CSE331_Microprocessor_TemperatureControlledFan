@@ -1,0 +1,37 @@
+.MODEL SMALL
+.STACK 100h
+.DATA
+    A DB 10 DUP (?), '$'
+    newl db 0ah,0dh, '$'
+.CODE
+    MOV AX, @DATA
+    MOV DS, AX
+    MOV CX, 10
+    MOV AH, 1
+    LEA SI, A
+    
+    INTERRUPT:
+    INT 21H
+    MOV [SI], AL
+    INC SI
+    
+    INT 21H
+    CMP AL, 0DH
+    
+    JE EXIT
+    
+    JNZ INTERRUPT
+    
+    LOOP INTERRUPT
+    
+    MOV AH, 9
+    LEA DX, newl
+    INT 21H
+    LEA DX, A
+    INT 21H 
+    
+    
+    
+    EXIT:
+    MOV AH, 4CH
+    INT 21H

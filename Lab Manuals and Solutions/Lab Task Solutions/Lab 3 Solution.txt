@@ -1,0 +1,129 @@
+; LAB 3 TASK 1
+--------------
+.MODEL SMALL
+.STACK 100H
+.DATA
+      ARRAY1 DB 5, 2, 3, 4, 0AH  
+      ARRAY2 DB 5 DUP(?) ;BLANK ARRAY
+.CODE
+      MOV AX, @DATA
+      MOV DS, AX
+      
+      MOV BL, ARRAY1[SI] ;COPIES CONTENT OF ARRAY1[0] INTO BL 
+      MOV ARRAY2[SI], BL ;COPIES CONTENT OF BL INTO ARRAY2[0]
+      INC SI             ;SI BECOMES 1
+      
+      MOV AL, ARRAY1[SI] ;COPIES CONTENT OF ARRAY1[1] INTO BL
+      MOV ARRAY2[SI], AL ;COPIES CONTENT OF BL INTO ARRAY2[1]
+      INC SI             ;SI BECOMES 2
+      
+      MOV AL, ARRAY1[2]  ;COPIES CONTENT OF ARRAY1[2] INTO BL
+      MOV ARRAY2[SI], AL ;COPIES CONTENT OF BL INTO ARRAY2[2]
+      INC SI             ;SI BECOMES 3
+      
+      MOV AL, ARRAY1[SI] ;COPIES CONTENT OF ARRAY1[3] INTO BL
+      MOV ARRAY2[SI], AL ;COPIES CONTENT OF BL INTO ARRAY2[3]
+      INC SI             ;SI BECOMES 4
+      
+      MOV AL, ARRAY1[SI] ;COPIES CONTENT OF ARRAY1[4] INTO BL
+      MOV ARRAY2[SI], AL ;COPIES CONTENT OF BL INTO ARRAY2[4] 
+      
+EXIT:
+      MOV AH, 4CH        ;EXIT FUNCTION
+      INT 21H  
+
+; LAB 3 TASK 2
+--------------
+.MODEL SMALL
+.STACK 100H
+.DATA 
+      STR DB "abc$"    ;STRING WITH LOWER-CASE CHARACTERS
+.CODE
+      MOV AX, @DATA
+      MOV DS, AX
+      
+      MOV AH, 2H       ;SINGLE-KEY OUTPUT FUNCTION
+      MOV SI, 1H     
+      
+      MOV DL, STR      ;COPIES CONTENT OF STR[0] INTO DL
+      SUB DL, 20H      ;61H('a')-20H = 41H('A')
+      INT 21H
+      
+      MOV DL, STR[SI]  ;COPIES CONTENT OF STR[1] INTO DL
+      SUB DL, 20H      ;62H('b') - 20H = 42H('B')
+      INT 21H        
+      INC SI           ;SI BECOMES 2
+      
+      MOV DL, STR[SI]  ;COPIES CONTENT OF STR[2] INTO DL
+      SUB DL, 20H      ;62H('c') - 20H = 42H('C')
+      INT 21H
+      
+EXIT:                  ;EXIT FUNCTION
+      MOV AH, 4CH
+      INT 21H
+      
+;LAB 3 TASK 3
+-------------
+.MODEL SMALL
+.STACK 100H
+.DATA
+
+.CODE
+      MOV AH, 1H 
+      INT 21H     ;INPUT-1 IN AL
+      MOV BL, AL  ;COPIES INPUT INTO BL
+      
+       
+      INT 21H     ;INPUT-2 IN AL
+      MOV CL, AL  ;COPIES INPUT INTO CL
+      
+      ADD BL, CL  ;ADDS CONTENT OF BL AND CL
+                  ;RESULT IS IN BL
+      SUB BL, 30H ;30H IS '0' 
+      ;34(4) + 35(5) = 69H
+      ;69H - 30H = 39H(9)  
+      
+      MOV AH, 2H  ;OUTPUT
+      MOV DL, 0AH
+      INT 21H     ;NEWLINE 
+      MOV DL, 0DH 
+      INT 21H     ;CARRIAGE RETURN
+      MOV DL, BL  
+      INT 21H     ;PRINTS RESULT     
+
+EXIT:
+      MOV AH, 4CH ;EXIT FUNCTION
+      INT 21H    
+
+;LAB 3 TASK 4
+-------------
+.MODEL SMALL
+.STACK 100H
+.DATA
+
+.CODE
+      MOV AH, 1H 
+      INT 21H     ;INPUT-1 IN AL
+      MOV BL, AL  ;COPIES INPUT INTO BL
+      
+       
+      INT 21H     ;INPUT-2 IN AL
+      MOV BH, AL  ;COPIES INPUT INTO BH
+      
+      SUB BL, BH  ;SUBTRACTS CONTENT OF BH FROM CONTENT OF BL
+                  ;RESULT IS IN BL
+      ADD BL, 30H ;30H IS '0' 
+      ;35(5) - 34(4) = 1H
+      ;1H + 30H = 31H(1)  
+      
+      MOV AH, 2H  ;OUTPUT
+      MOV DL, 0AH
+      INT 21H     ;NEWLINE 
+      MOV DL, 0DH 
+      INT 21H     ;CARRIAGE RETURN
+      MOV DL, BL  
+      INT 21H     ;PRINTS RESULT     
+
+EXIT:
+      MOV AH, 4CH ;EXIT FUNCTION
+      INT 21H  	  

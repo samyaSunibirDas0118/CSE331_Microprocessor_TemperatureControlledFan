@@ -1,0 +1,45 @@
+include "emu8086.inc"
+
+.model small
+.stack 100h
+.data
+
+.code
+    mov ax, @data
+    mov ds, ax
+    
+    mov bx, 8
+    mov si, 0
+    
+    
+    
+    
+    
+    input:
+    call scan_num
+    printn 
+    
+    add si, cx
+    dec bx
+   
+    
+    jnz input 
+    shr si, 3 ;dividing by 8 of an unsigned number is the same as shifting the number 3 times to the right.
+    mov ax, si
+    
+    print "The average is = "
+    call print_num 
+    
+    
+    
+    
+    
+    
+    
+exit:
+    mov ah, 4ch
+    int 21h
+    
+define_print_num
+define_print_num_uns
+define_scan_num

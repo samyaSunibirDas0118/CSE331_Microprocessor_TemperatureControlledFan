@@ -1,0 +1,138 @@
+;LAB 4 - TASK 1 
+--------------- 
+.MODEL SMALL
+.STACK 100H
+.DATA
+.CODE
+      ;INPUT
+      MOV AH, 1H
+      INT 21H
+      
+      CMP AL, 31H  ;IF(INPUT==1), GOTO PRINT_O 
+      JE PRINT_O   ;ELSE GOTO NEXT INSTRUCTION
+      
+      CMP AL, 32H  ;IF(INPUT==2), GOTO PRINT_E 
+      JE PRINT_E   ;ELSE GOTO NEXT INSTRUCTION
+      
+      CMP AL, 33H  ;IF(INPUT==3), GOTO PRINT_O 
+      JE PRINT_O   ;ELSE GOTO NEXT INSTRUCTION
+      
+      CMP AL, 34H  ;IF(INPUT==4), GOTO PRINT_E 
+      JE PRINT_E   ;ELSE GOTO NEXT INSTRUCTION
+      
+      CMP AL, 35H  ;IF(INPUT==5), GOTO PRINT_O 
+      JE PRINT_O   ;ELSE GOTO NEXT INSTRUCTION 
+      
+      JMP EXIT     ;IN ALL OTHER CASES GOTO EXIT
+      ;SO, PRINT_O & PRINT_E WILL BE SKIPPED   
+PRINT_O:
+      MOV AH, 2H   
+      MOV DL, 'O'
+      INT 21H      ;PRINTS 'O'
+      JMP EXIT     ;JUMP UNCONDITIONALLY TO EXIT
+                   ;SO, PRINT_E WILL BE SKIPPED
+PRINT_E:
+      MOV AH, 2H   
+      MOV DL, 'E'
+      INT 21H      ;PRINTS 'O'
+EXIT:
+      MOV AH, 4CH
+      INT 21H 
+
+;LAB 4 - TASK 2 
+--------------- 
+.MODEL SMALL
+.STACK 100H
+.DATA
+      PROMPT DB "ENTER A LINE OF TEXT: ",'$'
+      STR DB 30 DUP(?), '$' ;FOR STORING USER INPUT
+.CODE
+      MOV AX, @DATA
+      MOV DS, AX  
+      ;PROMPT THE USER TO ENTER A TEXT
+      MOV AH, 9H
+      LEA DX, PROMPT 
+      INT 21H     
+      
+      MOV AH, 1H  ;SINGLE-KEY INPUT
+      MOV SI, 0H      
+INPUT:
+      INT 21H
+      CMP AL, 0DH ;CHECKS IF INPUT IS CARRIAGE RETURN
+      JE STOP     ;IF YES, GOTO STOP
+                  ;IF NO, STORE IT INTO STR
+      MOV STR[SI], AL
+      INC SI     
+      JMP INPUT   ;GOTO INPUT UNCONDITIONALLY
+STOP:
+      MOV STR[SI], '$'
+EXIT:
+      MOV AH, 4CH
+      INT 21H                
+                                                         
+;LAB 4 - TASK 3 
+--------------- 
+.MODEL SMALL
+.STACK 100H
+.DATA 
+      MSG1 DB "YES, THIS IS A DIGIT$"
+      MSG2 DB "NO, THIS IS NOT A DIGIT$" 
+      NEWLINE DB 0AH, 0DH, '$'
+.CODE 
+      MOV AX, @DATA
+      MOV DS, AX
+
+;A CHARACTER IS A DIGIT IF(CHARACTER>='0' AND CHARACTER<='9') 
+      MOV AH, 1H           ;SINLE-KEY INPUT 
+      INT 21H
+      CMP AL, 30H          ;COMPARES INPUT WITH '0'
+      JGE CHECK_UPPERLIMIT ;IF (INPUT>='0'),GOTO CHECK_UPPERLIMIT
+      JMP PRINT_NO         ;IF NOT, THEN GOTO PRINT_NO
+	  
+CHECK_UPPERLIMIT:
+      CMP AL, 39H          ;COMPARES INPUT WITH '9'
+      JLE PRINT_YES        ;IF INPUT <= 9, GOTO PRINT_YES
+      JMP PRINT_NO         ;IF NOT, GOTO PRINT_NO
+PRINT_YES:
+      MOV AH, 9H
+      LEA DX, NEWLINE      
+      INT 21H              ;PRINTS NEWLINE
+      LEA DX, MSG1         
+      INT 21H              ;PRINTS YES
+      JMP EXIT             ;JUMPS TO EXIT, PRINT_NO IS SKIPPED
+PRINT_NO:
+      MOV AH, 9H
+      LEA DX, NEWLINE      
+      INT 21H              ;PRINTS NEWLINE
+      LEA DX, MSG2         
+      INT 21H              ;PRINTS NO       
+EXIT:
+      MOV AH, 4CH
+      INT 21H   
+               
+;LAB 4 - TASK 4 
+--------------- 
+.MODEL SMALL
+.STACK 100H
+.DATA 
+      
+.CODE 
+      MOV AH, 2H  ;SINLE-KEY OUTPUT
+      MOV BL, 41H ;41H = 'A' INTO BL
+      MOV CX, 26  ;SET COUNT TO 26, AS THERE ARE 26 LETTERS 
+PRINT:
+      MOV DL, BL
+      INT 21H
+      INC BL  
+	  
+      ;PRINTING NEW LINE
+      MOV DL, 0AH 
+      INT 21H
+      MOV DL, 0DH 
+      INT 21H 
+LOOP PRINT        ;DEC CX, THEN CHECKS IF(CX==0)
+                  ;IF YES, GOTO NEXT INSTRUCTION
+                  ;IF NO, GOTO PRINT       
+EXIT:
+      MOV AH, 4CH
+      INT 21H                	  

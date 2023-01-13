@@ -1,0 +1,29 @@
+include "emu8086.inc"
+
+.model small
+.stack 100h
+.data
+
+.code
+    mov ax, @data
+    mov ds, ax
+    
+    mov bx, 8
+    
+    
+    
+    input:
+    call scan_num
+    
+    dec bx
+    jnz input
+    
+    
+    
+exit:
+    mov ah, 4ch
+    int 21h
+    
+define_print_num
+define_print_num_uns
+define_scan_num

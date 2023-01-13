@@ -1,0 +1,76 @@
+include "emu8086.inc"
+
+.model small
+.stack 100h
+.data
+     largest dw 8 dup (?)
+     smallest dw 8 dup (?)
+.code
+    mov ax, @data
+    mov ds, ax
+    
+    mov bx, 8
+    
+     
+    input:
+    dec bx
+    cmp bx, 0
+    jl result
+    
+    call scan_num
+    mov dx, cx
+    printn
+    
+    cmp bx, 7
+    jz initialize_result
+    jmp cmp_largest
+    
+    initialize_result:
+    mov largest, dx
+    mov smallest, dx
+    jmp input
+    
+    cmp_smallest:
+    cmp dx, smallest
+    jl find_smallest
+    
+    cmp_largest:
+    cmp dx, largest
+    jg find_largest
+    
+    
+    
+    jmp input
+    
+    
+    find_largest:
+    mov largest, dx
+    jmp input
+    
+    find_smallest:
+    mov smallest, dx
+    jmp input
+    
+    result:
+    
+    printn
+    mov ax, largest
+    print "max = "
+    call print_num
+    
+    printn
+    mov ax, smallest
+    print "min = "
+    call print_num
+    
+    
+    
+    
+    
+exit:
+    mov ah, 4ch
+    int 21h
+    
+define_print_num
+define_print_num_uns
+define_scan_num
